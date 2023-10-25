@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  fizzbuzz-app:
+    build:
+      context: ../..
+      target: fizzbuzz-app
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongo
+      - MONGO_PORT=27017
+      - LOG_LEVEL=INFO
+
+  tests:
+    build:
+      context: ../..
+      target: tests
+    depends_on:
+      - fizzbuzz-app
+    environment:
+      - API_URL=fizzbuzz-app
+      - API_PORT=8000
+    command: ["sh", "-c", "sleep 10 && pytest -s -vv tests/integration"]
