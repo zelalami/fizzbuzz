@@ -12,3 +12,8 @@ FROM base as fizzbuzz-app
 RUN pip install --no-cache-dir -r requirements/requirements.txt
 EXPOSE 8000
 CMD ["uvicorn", "fizzbuzz.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Test layer
+FROM base as tests
+COPY tests/ ./tests/
+RUN pip install --no-cache-dir -r requirements/tests_requirements.txt
